@@ -30,7 +30,7 @@ public class CensusAnalyzerTestClass {
     public void givenStateCensusCSVFile_ShouldReturnTrue_IfTheNumberOfRecordsAfterReadingFromFileMatches(){
         int count = 0;
         try {
-            count = censusAnalyzer.loadCensusData(INDIA_CENSUS_CSV_FILE_PATH);
+            count = censusAnalyzer.loadData(INDIA_CENSUS_CSV_FILE_PATH, CensusAnalyzer.DataType.CENSUS_TYPE);
         } catch (CensusAnalyzerException e) {
             e.printStackTrace();
         }
@@ -42,7 +42,7 @@ public class CensusAnalyzerTestClass {
         try {
             ExpectedException exceptionrule = ExpectedException.none();
             exceptionrule.expect(CensusAnalyzerException.class);
-            censusAnalyzer.loadCensusData(WRONG_PATH);
+            censusAnalyzer.loadData(WRONG_PATH, CensusAnalyzer.DataType.CENSUS_TYPE);
         } catch (CensusAnalyzerException e) {
             e.printStackTrace();
             Assert.assertEquals(CensusAnalyzerException.ExceptionType.FILE_NOT_FOUND, e.type);
@@ -54,7 +54,7 @@ public class CensusAnalyzerTestClass {
         try {
             ExpectedException exceptionrule = ExpectedException.none();
             exceptionrule.expect(CensusAnalyzerException.class);
-            censusAnalyzer.loadCensusData(WRONG_FILE_TYPE);
+            censusAnalyzer.loadData(WRONG_FILE_TYPE, CensusAnalyzer.DataType.CENSUS_TYPE);
         } catch (CensusAnalyzerException e) {
             e.printStackTrace();
             Assert.assertEquals(CensusAnalyzerException.ExceptionType.WRONG_FILE_TYPE, e.type);
@@ -66,7 +66,7 @@ public class CensusAnalyzerTestClass {
         try {
             ExpectedException exceptionrule = ExpectedException.none();
             exceptionrule.expect(CensusAnalyzerException.class);
-            censusAnalyzer.loadCensusData(WRONG_DELIMITER_FILE);
+            censusAnalyzer.loadData(WRONG_DELIMITER_FILE, CensusAnalyzer.DataType.CENSUS_TYPE);
         } catch (CensusAnalyzerException e) {
             e.printStackTrace();
             System.out.println(e.type);
@@ -79,7 +79,7 @@ public class CensusAnalyzerTestClass {
         try {
             ExpectedException exceptionrule = ExpectedException.none();
             exceptionrule.expect(CensusAnalyzerException.class);
-            censusAnalyzer.loadCensusData(WRONG_HEADER_FILE);
+            censusAnalyzer.loadData(WRONG_HEADER_FILE, CensusAnalyzer.DataType.CENSUS_TYPE);
         } catch (CensusAnalyzerException e) {
             e.printStackTrace();
             System.out.println(e.type);
