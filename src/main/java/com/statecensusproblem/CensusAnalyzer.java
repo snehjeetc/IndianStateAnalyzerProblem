@@ -15,6 +15,7 @@ import java.util.regex.Pattern;
 import java.util.stream.StreamSupport;
 
 public class CensusAnalyzer {
+
     private final static Pattern pattern = Pattern.compile(".+\\.(txt|csv)$");
 
     public int loadCensusData(String path) throws CensusAnalyzerException{
@@ -27,7 +28,6 @@ public class CensusAnalyzer {
             CsvToBean<StateCensusCSV> csvToBean = csvToBeanBuilder.build();
             Iterator<StateCensusCSV> censusCSVIterator = csvToBean.iterator();
             Iterable<StateCensusCSV> iterable = () -> censusCSVIterator;
-            reader.close();
             return (int) StreamSupport.stream(iterable.spliterator(), false).count();
         }catch(NoSuchFileException e){
             throw new CensusAnalyzerException(e.getMessage(), CensusAnalyzerException.ExceptionType.FILE_NOT_FOUND);
@@ -43,5 +43,22 @@ public class CensusAnalyzer {
         }catch(IOException e){
             throw new CensusAnalyzerException(e.getMessage(), CensusAnalyzerException.ExceptionType.IO_EXCEPTION);
         }
+    }
+
+    public int loadStateCodeData(String path){
+        Reader reader = null;
+        try{
+            reader = Files.newBufferedReader(Paths.get(path));
+            CsvToBeanBuilder<StateCodeCSV> csvCsvToBeanBuilder =
+                    new CsvToBeanBuilder<StateCodeCSV>(reader).withType(StateCodeCSV.class)
+                                                  .withIgnoreLeadingWhiteSpace(true);
+            CsvToBean<StateCodeCSV> stateCodeCSVCsvToBean = csvCsvToBeanBuilder.build();
+            Iterable<StateCodeCSV> stateCodeCSVIterable = () -> stateCodeCSVCsvToBean.iterator();
+           // reader.close();
+            return (int) StreamSupport.stream(stateCodeCSVIterable.spliterator(), false).count();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return -1;
     }
 }
