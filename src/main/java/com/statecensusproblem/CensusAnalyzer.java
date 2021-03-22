@@ -61,6 +61,8 @@ public class CensusAnalyzer {
         }catch(RuntimeException e){
             if(!pattern.matcher(path).matches())
                 throw new CensusAnalyzerException(e.getMessage(), CensusAnalyzerException.ExceptionType.WRONG_FILE_TYPE);
+            if(e.getCause().toString().contains("CsvDataTypeMismatchException"))
+                throw new CensusAnalyzerException(e.getMessage(), CensusAnalyzerException.ExceptionType.WRONG_DELIMITER_TYPE);
             throw new RuntimeException(e.getMessage());
         }catch(IOException e){
             e.printStackTrace();
