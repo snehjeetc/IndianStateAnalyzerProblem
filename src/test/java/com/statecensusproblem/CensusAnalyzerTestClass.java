@@ -14,6 +14,8 @@ public class CensusAnalyzerTestClass {
             = "/home/snehjeetc12/IdeaProjects/StateCensusProblem/src/test/resources/IndianStateCensusData";
     public static final String WRONG_FILE_TYPE
             = "/home/snehjeetc12/IdeaProjects/StateCensusProblem/src/main/resources/pom.xml";
+    public static final String WRONG_DELIMITER_FILE
+            = "/home/snehjeetc12/IdeaProjects/StateCensusProblem/src/main/resources/IndianStateCensusData.txt";
 
     private CensusAnalyzer censusAnalyzer;
 
@@ -53,7 +55,19 @@ public class CensusAnalyzerTestClass {
             censusAnalyzer.loadCensusData(WRONG_FILE_TYPE);
         } catch (CensusAnalyzerException e) {
             e.printStackTrace();
-            Assert.assertEquals(CensusAnalyzerException.ExceptionType.CORRUPT_FILE_TYPE, e.type);
+            Assert.assertEquals(CensusAnalyzerException.ExceptionType.WRONG_FILE_TYPE, e.type);
+        }
+    }
+
+    @Test
+    public void givenCorrectStateCensusCSVFile_ButWrongDelimiterType_ShouldThrowCustomException(){
+        try {
+            ExpectedException exceptionrule = ExpectedException.none();
+            exceptionrule.expect(CensusAnalyzerException.class);
+            censusAnalyzer.loadCensusData(WRONG_DELIMITER_FILE);
+        } catch (CensusAnalyzerException e) {
+            e.printStackTrace();
+            Assert.assertEquals(CensusAnalyzerException.ExceptionType.WRONG_DELIMITER_TYPE, e.type);
         }
     }
 }
