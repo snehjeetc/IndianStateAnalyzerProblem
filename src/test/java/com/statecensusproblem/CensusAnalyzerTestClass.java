@@ -16,6 +16,8 @@ public class CensusAnalyzerTestClass {
             = "/home/snehjeetc12/IdeaProjects/StateCensusProblem/src/main/resources/pom.xml";
     public static final String WRONG_DELIMITER_FILE
             = "/home/snehjeetc12/IdeaProjects/StateCensusProblem/src/main/resources/IndianStateCensusData.txt";
+    public static final String WRONG_HEADER_FILE
+            = "/home/snehjeetc12/IdeaProjects/StateCensusProblem/src/main/resources/StateCensusWrongHeader.csv";
 
     private CensusAnalyzer censusAnalyzer;
 
@@ -67,7 +69,21 @@ public class CensusAnalyzerTestClass {
             censusAnalyzer.loadCensusData(WRONG_DELIMITER_FILE);
         } catch (CensusAnalyzerException e) {
             e.printStackTrace();
+            System.out.println(e.type);
             Assert.assertEquals(CensusAnalyzerException.ExceptionType.WRONG_DELIMITER_TYPE, e.type);
+        }
+    }
+
+    @Test
+    public void givenCorrectStateCensusCSVFile_ButWrongHeader_ShouldThrowCSV_WrongHeader_typeException(){
+        try {
+            ExpectedException exceptionrule = ExpectedException.none();
+            exceptionrule.expect(CensusAnalyzerException.class);
+            censusAnalyzer.loadCensusData(WRONG_HEADER_FILE);
+        } catch (CensusAnalyzerException e) {
+            e.printStackTrace();
+            System.out.println(e.type);
+            Assert.assertEquals(CensusAnalyzerException.ExceptionType.WRONG_HEADER_TYPE, e.type);
         }
     }
 }
