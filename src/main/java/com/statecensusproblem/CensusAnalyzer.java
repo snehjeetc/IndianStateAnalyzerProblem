@@ -10,7 +10,7 @@ import java.nio.file.Paths;
 import java.util.Iterator;
 
 public class CensusAnalyzer {
-    public int loadCensusData(String path){
+    public int loadCensusData(String path) throws CensusAnalyzerException{
         int i = 0;
         try{
             Reader reader = Files.newBufferedReader(Paths.get(path));
@@ -24,7 +24,7 @@ public class CensusAnalyzer {
                 i++;
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new CensusAnalyzerException("File not found", CensusAnalyzerException.ExceptionType.FILE_NOT_FOUND);
         }
         return i;
     }
