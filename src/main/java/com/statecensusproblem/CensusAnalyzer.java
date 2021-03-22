@@ -45,7 +45,7 @@ public class CensusAnalyzer {
         }
     }
 
-    public int loadStateCodeData(String path){
+    public int loadStateCodeData(String path) throws CensusAnalyzerException {
         Reader reader = null;
         try{
             reader = Files.newBufferedReader(Paths.get(path));
@@ -56,7 +56,9 @@ public class CensusAnalyzer {
             Iterable<StateCodeCSV> stateCodeCSVIterable = () -> stateCodeCSVCsvToBean.iterator();
            // reader.close();
             return (int) StreamSupport.stream(stateCodeCSVIterable.spliterator(), false).count();
-        } catch (IOException e) {
+        }catch (NoSuchFileException e) {
+            throw new CensusAnalyzerException(e.getMessage(), CensusAnalyzerException.ExceptionType.FILE_NOT_FOUND);
+        }catch(IOException e){
             e.printStackTrace();
         }
         return -1;
