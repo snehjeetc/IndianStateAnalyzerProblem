@@ -63,10 +63,11 @@ public class CensusAnalyzer {
                 throw new CensusAnalyzerException(e.getMessage(), CensusAnalyzerException.ExceptionType.WRONG_FILE_TYPE);
             if(e.getCause().toString().contains("CsvDataTypeMismatchException"))
                 throw new CensusAnalyzerException(e.getMessage(), CensusAnalyzerException.ExceptionType.WRONG_DELIMITER_TYPE);
-            throw new RuntimeException(e.getMessage());
+            if(e.getMessage().contains("CSV header"))
+                throw new CensusAnalyzerException(e.getMessage(), CensusAnalyzerException.ExceptionType.WRONG_HEADER_TYPE);
+            throw new CensusAnalyzerException(e.getMessage(), CensusAnalyzerException.ExceptionType.BAD_STATE);
         }catch(IOException e){
-            e.printStackTrace();
+            throw new CensusAnalyzerException(e.getMessage(), CensusAnalyzerException.ExceptionType.IO_EXCEPTION);
         }
-        return -1;
     }
 }
