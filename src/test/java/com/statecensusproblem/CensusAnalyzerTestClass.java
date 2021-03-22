@@ -50,7 +50,7 @@ public class CensusAnalyzerTestClass {
     }
 
     @Test
-    public void givenStateCensusCSVFile_IfGivenFileIsCorrect_NotOfWrongType_ShouldThrowCustomExceptionOfWrongType() throws IOException {
+    public void givenStateCensusCSVFile_IfGivenFileIsExists_ButOfWrongType_ShouldThrowCustomExceptionOfWrongType() throws IOException {
         try {
             ExpectedException exceptionrule = ExpectedException.none();
             exceptionrule.expect(CensusAnalyzerException.class);

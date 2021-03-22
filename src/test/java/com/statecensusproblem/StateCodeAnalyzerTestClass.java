@@ -16,7 +16,8 @@ public class StateCodeAnalyzerTestClass {
             = "/home/snehjeetc12/IdeaProjects/StateCensusProblem/src/test/resources/IndiaStateCode.csv";
     private static final String WRONG_FILE_TYPE
             = "/home/snehjeetc12/IdeaProjects/StateCensusProblem/src/main/resources/pom.xml";
-
+    public static final String WRONG_DELIMITER_FILE
+            = "/home/snehjeetc12/IdeaProjects/StateCensusProblem/src/main/resources/IndiaStateCode.txt";
     @Before
     public void init(){
         censusAnalyzer = new CensusAnalyzer();
@@ -41,15 +42,27 @@ public class StateCodeAnalyzerTestClass {
     }
 
     @Test
-    public void givenStateCensusCSVFile_IfGivenFileIsCorrect_NotOfWrongType_ShouldThrowCustomExceptionOfWrongType() throws IOException {
+    public void givenStateCodeCSVFile_IfGivenFileExits_ButOfWrongType_ShouldThrowCustomExceptionOfWrongType() throws IOException {
         try {
             ExpectedException exceptionrule = ExpectedException.none();
             exceptionrule.expect(CensusAnalyzerException.class);
-            censusAnalyzer.loadCensusData(WRONG_FILE_TYPE);
+            censusAnalyzer.loadStateCodeData(WRONG_FILE_TYPE);
         } catch (CensusAnalyzerException e) {
             e.printStackTrace();
             Assert.assertEquals(CensusAnalyzerException.ExceptionType.WRONG_FILE_TYPE, e.type);
         }
     }
 
+    @Test
+    public void givenCorrectStateCodeCSVFile_ButWrongDelimiterType_ShouldThrowCustomException(){
+        try {
+            ExpectedException exceptionrule = ExpectedException.none();
+            exceptionrule.expect(CensusAnalyzerException.class);
+            censusAnalyzer.loadStateCodeData(WRONG_DELIMITER_FILE);
+        } catch (CensusAnalyzerException e) {
+            e.printStackTrace();
+            System.out.println(e.type);
+            Assert.assertEquals(CensusAnalyzerException.ExceptionType.WRONG_DELIMITER_TYPE, e.type);
+        }
+    }
 }
