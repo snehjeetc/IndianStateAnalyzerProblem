@@ -7,6 +7,8 @@ import org.junit.rules.ExpectedException;
 
 import java.io.IOException;
 
+import static com.statecensusproblem.CensusAnalyzerTestClass.WRONG_HEADER_FILE;
+
 public class StateCodeAnalyzerTestClass {
     private CensusAnalyzer censusAnalyzer;
 
@@ -63,6 +65,19 @@ public class StateCodeAnalyzerTestClass {
             e.printStackTrace();
             System.out.println(e.type);
             Assert.assertEquals(CensusAnalyzerException.ExceptionType.WRONG_DELIMITER_TYPE, e.type);
+        }
+    }
+
+    @Test
+    public void givenCorrectStateCodeCSVFile_ButWrongHeader_ShouldThrowCSV_WrongHeader_typeException(){
+        try {
+            ExpectedException exceptionrule = ExpectedException.none();
+            exceptionrule.expect(CensusAnalyzerException.class);
+            censusAnalyzer.loadStateCodeData(WRONG_HEADER_FILE);
+        } catch (CensusAnalyzerException e) {
+            e.printStackTrace();
+            System.out.println(e.type);
+            Assert.assertEquals(CensusAnalyzerException.ExceptionType.WRONG_HEADER_TYPE, e.type);
         }
     }
 }
