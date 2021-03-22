@@ -3,6 +3,7 @@ package com.statecensusproblem;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 public class CensusAnalyzerTestClass {
     public static final String INDIA_CENSUS_CSV_FILE_PATH
@@ -19,7 +20,26 @@ public class CensusAnalyzerTestClass {
 
     @Test
     public void givenStateCensusCSVFile_ShouldReturnTrue_IfTheNumberOfRecordsAfterReadingFromFileMatches(){
-        int count = censusAnalyzer.loadCensusData(INDIA_CENSUS_CSV_FILE_PATH);
+
+        int count = 0;
+        try {
+            count = censusAnalyzer.loadCensusData(INDIA_CENSUS_CSV_FILE_PATH);
+        } catch (CensusAnalyzerException e) {
+            e.printStackTrace();
+        }
         Assert.assertEquals(29, count);
+    }
+
+    @Test
+    public void givenStateCensusCSVFile_IfGivenFileIsIncorrect_ShouldThrowACustomException(){
+        try {
+            ExpectedException exceptionrule = ExpectedException.none();
+            exceptionrule.expect(CensusAnalyzerException.class);
+            censusAnalyzer.loadCensusData(WRONG_PATH);
+        } catch (CensusAnalyzerException e) {
+            e.printStackTrace();
+            Assert.assertEquals(CensusAnalyzerException.ExceptionType.FILE_NOT_FOUND, e.type);
+        }
+
     }
 }
