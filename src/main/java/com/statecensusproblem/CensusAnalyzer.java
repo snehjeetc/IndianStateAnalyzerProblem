@@ -58,6 +58,10 @@ public class CensusAnalyzer {
             return (int) StreamSupport.stream(stateCodeCSVIterable.spliterator(), false).count();
         }catch (NoSuchFileException e) {
             throw new CensusAnalyzerException(e.getMessage(), CensusAnalyzerException.ExceptionType.FILE_NOT_FOUND);
+        }catch(RuntimeException e){
+            if(!pattern.matcher(path).matches())
+                throw new CensusAnalyzerException(e.getMessage(), CensusAnalyzerException.ExceptionType.WRONG_FILE_TYPE);
+            throw new RuntimeException(e.getMessage());
         }catch(IOException e){
             e.printStackTrace();
         }
