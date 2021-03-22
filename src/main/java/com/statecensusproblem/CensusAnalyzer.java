@@ -2,6 +2,8 @@ package com.statecensusproblem;
 
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
+import com.opencsv.exceptions.CsvDataTypeMismatchException;
+import com.opencsv.exceptions.CsvException;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -9,11 +11,13 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.util.Iterator;
+import java.util.regex.Pattern;
+import java.util.stream.StreamSupport;
 
 public class CensusAnalyzer {
-    public int loadCensusData(String path) throws CensusAnalyzerException{
-        int i = 0;
+    private final static Pattern pattern = Pattern.compile(".+\\.(txt|csv)$");
 
+    public int loadCensusData(String path) throws CensusAnalyzerException{
         Reader reader = null;
         try{
             reader = Files.newBufferedReader(Paths.get(path));
@@ -22,18 +26,19 @@ public class CensusAnalyzer {
                             .withIgnoreLeadingWhiteSpace(true);
             CsvToBean<StateCensusCSV> csvToBean = csvToBeanBuilder.build();
             Iterator<StateCensusCSV> censusCSVIterator = csvToBean.iterator();
-            while(censusCSVIterator.hasNext()){
-                StateCensusCSV stateCensusCSV = censusCSVIterator.next();
-                i++;
-            }
+            Iterable<StateCensusCSV> iterable = () -> censusCSVIterator;
             reader.close();
+            return (int) StreamSupport.stream(iterable.spliterator(), false).count();
         }catch(NoSuchFileException e){
-            throw new CensusAnalyzerException("File not found", CensusAnalyzerException.ExceptionType.FILE_NOT_FOUND);
+            throw new CensusAnalyzerException(e.getMessage(), CensusAnalyzerException.ExceptionType.FILE_NOT_FOUND);
         }catch(RuntimeException e){
-            throw new CensusAnalyzerException("Unable to read file", CensusAnalyzerException.ExceptionType.CORRUPT_FILE_TYPE);
+            if(!pattern.matcher(path).matches())
+                throw new CensusAnalyzerException(e.getMessage(), CensusAnalyzerException.ExceptionType.WRONG_FILE_TYPE);
+            if(e.getCause().toString().contains("CsvDataTypeMismatchException"))
+                throw new CensusAnalyzerException(e.getMessage(), CensusAnalyzerException.ExceptionType.WRONG_DELIMITER_TYPE);
         }catch(IOException e){
-            throw new CensusAnalyzerException("Something went wrong", CensusAnalyzerException.ExceptionType.IO_EXCEPTION);
+            throw new CensusAnalyzerException(e.getMessage(), CensusAnalyzerException.ExceptionType.IO_EXCEPTION);
         }
-        return i;
+        return -1;
     }
 }
