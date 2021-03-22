@@ -5,6 +5,8 @@ public class CensusAnalyzerException extends Exception {
         FILE_NOT_FOUND,
         WRONG_FILE_TYPE,
         WRONG_DELIMITER_TYPE,
+        WRONG_HEADER_TYPE,
+        BAD_STATE,
         IO_EXCEPTION;
     }
     ExceptionType type;
